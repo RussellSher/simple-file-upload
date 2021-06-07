@@ -1,23 +1,33 @@
 from django.shortcuts import render, redirect
+from django.shortcuts import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
+from django.urls import reverse
 from uploads.core.models import Document
 from uploads.core.forms import DocumentForm
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def home(request):
     documents = Document.objects.all()
-    # document1 = Document.objects.get(pk=2)
-    # print(document1.document)
+    # try:
+    #     document1 = Document.objects.get(pk=41)
+    #     print(document1[0])
+    # except ObjectDoesNotExist:
+    #     print("does not exist")
     return render(request, 'core/home.html', { 'documents': documents })
 
-def delete(request):
-    documents = Document.objects.all()
-    for document in documents:
-        document.delete() 
-    print('done')   
-    return render(request, 'core/home.html')#, { 'documents': documents })        
+
+def delete(request, pk):
+    if request.method =='POST':
+        book =  Document.objects.get(pk=pk)
+        #book.delete
+        print(book.uploaded_at)
+        print(book.document) 
+        delete_result = book.delete()
+        print(delete_result)
+           
+        return HttpResponseRedirect(reverse("home"))       
 
 
 def simple_upload(request):

@@ -10,9 +10,7 @@
     <li>
       <a href="{% url 'model_form_upload' %}">Model Form Upload</a>
     </li>
-    <li>
-      <a href="{% url 'delete' %}">Delete</a>
-    </li>    
+    
   </ul>
 
   <p>Uploaded files:</p>
@@ -21,7 +19,12 @@
       <li>
         <a class="filename" href="{{ obj.document.url}}">{{ obj.document.name }}</a>
         Uploaded at: {{ obj.uploaded_at }}
+        <form  method="post" action="{% url 'delete' obj.pk  %}">
+          {% csrf_token %}
+          <button type = "submit" class = "btn btn-danger">Delete</button>
+        </form>
       </li>
+     
     {% endfor %}
   </ul>
 {% endblock %}
